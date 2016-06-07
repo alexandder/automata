@@ -1,0 +1,332 @@
+\documentclass{xmgr}
+% Jeśli nowe rozdziały mają się zaczynać na stronach
+% nieparzystych:
+%\documentclass[openright]{xmgr}
+
+%\defaultfontfeatures{Scale=MatchLowercase}
+%\setmainfont[Numbers=OldStyle,Ligatures=TeX]{Minion Pro}
+%\setsansfont[Numbers=OldStyle,Ligatures=TeX]{Myriad Pro}
+% for fontspec version < 2.0
+%\setmainfont[Numbers=OldStyle,Mapping=tex-text]{Times}
+%\setsansfont[Numbers=OldStyle,Mapping=tex-text]{Times}
+%\setmonofont[Scale=0.75]{Monaco}
+
+% Opcjonalnie identyfikator dokumentu
+% drukowany tylko z włączoną opcją 'brudnopis':
+\wersja   {wersja wstępna [\ymdtoday]}
+
+\author   {Aleksander Bołt}
+\nralbumu {186565}
+
+
+\title    {Dynamiczne własności jednowymiarowych automatów komórkowych}
+\date     {2016}
+\miejsce  {Gdańsk}
+
+\opiekun  { dr Barbara Wolnik}
+
+% dodatkowe polecenia
+%\renewcommand{\filename}[1]{\texttt{#1}}
+%\definecolor{stress}{cmyk}{0,1,0.13,0} % RubineRed
+%\definecolor{topic}{cmyk}{0.98,0.13,0,0.43} % MidnightBlue
+\newtheorem{theorem}{Twierdzenie}
+\newtheorem{corollary}{Wniosek}
+\newtheorem{definition}{Definicja}
+\newtheorem{properties}{Własności}
+\newtheorem{example}{Przykład}
+\newtheorem{lemma}{Lemat}
+\newtheorem{fact}{Fakt}
+
+\begin{document}
+
+% streszczenie
+\begin{abstract}
+    
+\end{abstract}
+
+% słowa kluczowe
+\keywords{automata}
+
+% tytuł i spis treści
+\maketitle
+
+% wstęp
+\introduction
+
+Wstęp...
+
+\chapter{Historia i definicja automatów komórkowych}
+Automaty komórkowe zostały zaproponowane przez von Neumanna oraz Ulama i po raz pierwszy opisane w pracy Theory of Self-Reproducing Automata z 1966 roku.
+Największy wkład w rozwój teorii automatów komórkowych miał Stephen Wolfram wydając szereg prac na ten temat w latach 80 dwudziestego wieku.
+
+\section{Definicje i przykłady}
+W dalszej części pracy będziemy rozważali automaty dwustanowe i przyjmujemy, że zbiór stanów to $\{0,1\}$.
+\begin{definition}
+ Niech $r \in \mathbb{N}$. Regułą lokalną nazywamy funkcję $f : \{0, 1 \}^{2r+1} \rightarrow \{0,1\}$.
+\end{definition}
+Automat komórkowy będziemy utożsamiać z regułą lokalną. Liczbę $r$ będzie nazywać promieniem sąsiedztwa reguły $f$.
+
+\begin{definition}
+ Niech $f$ jest regułą o promieniu $r$ oraz $N \in \mathbb{N}$. $N$-komórkową regułą globalną nazywamy funkcję 
+ $F_{N} : \{0, 1 \}^{N} \rightarrow \{0,1\}^{N}$, spełniającą:
+ \[
+    F_{N}(...,x_{i},...) = (...,f(x_{i-r},...,x_{i},...,x_{i+r}),...),
+ \]
+oraz $x_{i+N} = x_{i}$, dla $i =0,1,...,N-1$.
+\end{definition}
+
+\begin{fact}
+ Liczba wszystkich dwustanowych, jednowymiarowych automatów komórkowych o promieniu $r \in \mathbb{N}$ jest równa $2^{2^{2r+1}}$. 
+\end{fact}
+
+\begin{proof}
+ Automat komórkowy utożsamiamy z regułą lokalną, zatem ich liczba jest równa liczbie wszystkich funkcji $f :\{0, 1 \}^{2r+1} \rightarrow \{0,1\}$.
+ Liczba ta jest równa
+ \[
+  |\{0,1\}|^{|\{0,1\}^{2r+1}|} = 2^{2^{2r+1}}.
+ \]
+
+\end{proof}
+
+W dalszym ciągu będziemy rozważali automaty komórkowe o promieniu $1$. Nazywamy je elementarnymi automatami komórkowymi i ich zbiór oznaczmy przez
+ECA. Z faktu 1 wynika:
+
+\begin{corollary}
+ Wszystkich elementarnych automatów komórkowych jest 256, tj. $|ECA| = 256$.
+\end{corollary}
+
+Każdy automat komórkowy możemy jednoznacznie określić przez tabelę określającą wartości reguły lokalnej. Tabela ta nosi nazwę Lookup table.
+\\Dla elementarnych automatów komórkowych ma ona postać:
+
+\begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l |}
+    \hline
+    111 & 110 & 101 & 100 & 011 & 010 & 001 & 000 \\ \hline
+    $l_{7}$ & $l_{6}$ & $l_{5}$ & $l_{4}$ & $l_{3}$ & $l_{2}$ & $l_{1}$ & $l_{0}$ \\ \hline
+    \end{tabular}
+\end{center}
+gdzie $l_{i} \in \{0,1\}$. Tabelę tę będziemy zapisywać skrótowo: $(l_{7}l_{6}l_{5}l_{4}l_{3}l_{2}l_{1}l_{0})$.
+\\Każda reguła z klasy $ECA$ jest zatem jednoznacznie określona przez liczbę binarną $(l_{7}l_{6}l_{5}l_{4}l_{3}l_{2}l_{1}l_{0})$. W ten sposób
+otrzymujemy numerację elementarnych automatów komórkowych: reguła $ECA_{i}$, gdzie $i \in \{0, 1, ..., 255\}$ to reguła, której wartości
+Lookup table stanowią kolejne cyfry liczby $i$ w postaci binarnej.
+
+\begin{example}
+ Reguła $ECA_{0}$ jest reprezentowana przez Lookup table $(00000000)$, zaś reguła $ECA_{110}$ przez $(01101110)$.
+\end{example}
+
+\section{Klasyfikacje jednowymiarowych automatów komórkowych}
+Automaty z klasy ECA można sklasyfikować ze względu na to jak przebiega ich ewolucja w czasie. Przy losowym warunku początkowym Wolfram zaproponował
+klasyfikację na cztery grupy:
+\enumerate
+\item Klasa I - ewolucja automatu prowadzi do jednorodnego stanu, na przykład składającego się z samych 0
+\item Klasa II - ewolucja prowadzi do stabilnego zbioru stanów lub do prostej okresowej struktru
+\item Klasa III - ewolucja prowadzi do chaotycznego wzoru
+\item Klasa IV - ewolucja prowadzi do złożonych struktur
+
+Tak zaproponowano klasyfikacja nie pozwala jednak w niektórych przypadkach jednoznacznie sklasyfikować reguł z grup III i IV. Poniższa tabela prezentuje
+klasyfikację dla reguł, które da się jednoznacznie sklasyfikować
+\begin{center}
+    \begin{tabular}{| l | l |}
+    \hline
+    Klasa I & 0, 8, 32, 40, 64, 96, 128, 136, 160, 168, 192, 224, 234, 235, 238, \\
+	    &  239, 248, 249, 250, 251, 252, 253, 254, 255 \\ \hline
+    Klasa II & 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 23, 24 \\
+	    &25, 26, 27, 28, 29, 31, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44 \\
+	    &46, 47, 48, 49, 50, 51, 52, 53, 55, 56, 57, 58, 59, 61, 62, 63, 65, 66 \\
+          &67, 68, 69, 70, 71, 72, 73, 74, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85 \\
+          &87, 88, 91, 92, 93, 94, 95, 97, 98, 99, 100, 103, 104, 107, 108, 109, 111 \\
+          &112, 113, 114, 115, 116, 117, 118, 119, 121, 123, 125, 127, 130, 131, 132 \\
+          &133, 134, 138, 139, 140, 141, 142, 143, 144, 145, 148, 152, 154, 155, 156\\
+          &157, 158, 159, 162, 163, 164, 166, 167, 170, 171, 172, 173, 174, 175, 176 \\
+          &177, 178, 179, 180, 181, 184, 185, 186, 187, 188, 189, 190, 191, 194, 196 \\
+          &197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211 \\
+          &212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 226, 227, 228 \\
+          &229, 230, 231, 232, 233, 236, 237, 240, 241, 242, 243, 244, 245, 246, 247 \\ \hline
+    Klasa III & 18, 22, 30, 45, 54, 60, 75, 86, 89, 90, 101, 102, 105, 122, 126, 129 \\
+          & 135, 146, 149, 150, 151, 153, 161, 165, 182, 183, 195 \\ \hline
+    Klasa IV & 41, 106, 110, 120, 124, 137, 147, 169, 193, 225 \\ \hline
+    \end{tabular}
+\end{center}
+
+\chapter{Struktura zbioru dwustanowych automatów komórkowych}
+
+
+\begin{definition}
+ Niech $f \in ECA$. Funkcję $R : ECA \rightarrow ECA$ określoną wzorem
+ \[
+  Rf(x,y,z) = f(z,y,x),
+ \]
+ dla $x,y,z \in {0,1}$ nazywamy transformacją reflection.
+ \\Funkcję $C : ECA \rightarrow ECA$ określoną wzorem
+ \[
+  Cf(x,y,z) = 1 - f(1-x,1-y,1-z),
+ \]
+ dla $x,y,z \in {0,1}$ nazywamy transformacją conjugate.
+\end{definition}
+
+\begin{fact}
+ Niech $f \in ECA$. Złożenie $R\circ C$ wyraża się wzorem:
+ \[
+  RC f (x,y,z) = 1 - f(1-z, 1-y, 1-x)
+ \]
+dla $x,y,z \in {0,1}$ oraz spełniającą
+\[
+ RCf = CRf.
+\]
+\end{fact}
+
+\begin{proof}
+ Dla dowolnych $x,y,z \in \{0,1\}$:
+ \[
+  R(Cf(x,y,z)) = C(z,y,x) = 1 - f(1-z,1-y,1-x)
+ \]
+\[
+ C(Rf(x,y,z)) = 1 - Rf(1-x, 1-y, 1-z) = 1 - f(1-z, 1-y, 1-x).
+\]
+
+\end{proof}
+
+\begin{fact}
+Dla $f \in ECA$ trasformacje $R$ i $C$ spełniają $RRf = f$ oraz $CCf = f$.
+\end{fact}
+
+\begin{proof}
+ Dla dowolnych $x,y,z \in \{0,1\}$:
+ \[
+  R(Rf(x,y,z)) = Rf(z,y,x) = f(x,y,z),
+ \]
+ \[
+  C(Cf(x,y,z)) = 1 - Cf(1-x,1-y,1-z) = 1 - (1 - f(1 - 1+x, 1 - 1+y, 1 - 1+z)) = f(x,y,z).
+ \]
+
+\end{proof}
+
+
+\begin{fact}
+ Niech $f \in ECA$ i $(l_{7}l_{6}l_{5}l_{4}l_{3}l_{2}l_{1}l_{0})$ to Lookup table dla reguły $f$. Wtedy
+ \begin{enumerate}
+  \item Lookup table dla reguły $Rf$ to 
+  \[
+   (l_{7}l_{3}l_{5}l_{1}l_{6}l_{2}l_{4}l_{0}).
+  \]
+  \item Lookup table dla reguły $Cf$ to 
+  \[
+  (1-l_{0}, 1- l_{1}, 1- l_{2}, 1- l_{3}, 1 - l_{4}, 1- l_{5}, 1 - l_{6}, 1 - l_{7}).
+  \]
+  \item Lookup table dla reguły $RCf$ to 
+  \[
+   (1-l_{0}, 1- l_{4}, 1- l_{2}, 1- l_{6}, 1 - l_{1}, 1- l_{5}, 1 - l_{3}, 1 - l_{7}).
+  \]
+ \end{enumerate}
+\end{fact}
+
+\begin{proof}
+ Ponieważ $f(1,1,1) = l_{7},$ zatem $Rf(1,1,1) = f(1,1,1) = l_{7}$. Podobnie $Rf(1,1,0) = Rf(0,1,1) = l_{3}$. W ten sam sposób obliczamy 
+ kolejne wartości podstawiając wszystkie $x,y,z \in \{0,1\}$.
+ \\ Analogicznie wyznaczamy Lookup table dla $Cf$ oraz $RCf$.
+\end{proof}
+
+\begin{example}
+ \begin{enumerate}
+  \item Lookup table dla reguły $ECA_{0}$ to $(00000000)$. Stosując na niej transformację $R$, $C$ oraz $RC$ otrzymujemy kolejno $(00000000)$,
+ $(11111111)$ oraz $(11111111)$. Zatem $ECA_{0} = R(ECA_{0})$ oraz \\$C(ECA_{0}) = RC(ECA_{0}) = ECA_{255}$.
+ \item Dla reguły $ECA_{51}$ danej przez $(00110011)$, otrzymujemy $ECA_{51} = R(ECA_{51}) = C(ECA_{51}) = RC(ECA_{51})$.
+ \item Dla reguły $ECA_{137}$ jej Lookup table to $(10001001)$. Dla transformacji $R$, $C$ oraz $RC$ otrzymujemy kolejno $(11000001)$, 
+ $(01101110)$ oraz $(01111100)$, zatem $R(ECA_{137}) = ECA_{193}$, $C(ECA_{137}) = ECA_{110}$, $R(ECA_{137}) = ECA_{124}$.
+ \end{enumerate}
+\end{example}
+
+Zbiór wszystkich elementarnych reguł $ECA$ możemy podzelić na rozłączne warstwy w ten sposób, że dwie reguły $f$ i $g$ należą do jednej warstwy wtedy
+i tylko wtedy gdy $g$ możemy uzyskać stosując którąś z transformacji $R$, $C$ lub $RC$ na $f$. W przeciwnym wypadku będziemy mówili, że reguły
+$f$ i $g$ są niezależne.
+
+\begin{theorem}
+ Liczba wszystkich niezależnych elementarnych automatów komórkowych jest równa $88$.
+\end{theorem}
+
+\begin{proof}
+ Niech $f \in ECA$. Możliwe są następujące przypadki:
+ \begin{enumerate}
+  \item $Cf = Rf = f$. Wtedy $C(Rf) = Cf = f$.
+  \item $Cf = Rf \neq f$. Wtedy $C(Rf) = CCf = f$.
+  \item $Cf = f \neq Rf$. Wtedy $C(Rf) = R(Cf) = Rf$.
+  \item $Cf \neq Rf = f$. Wtedy $C(Rf) = Cf$.
+  \item $Cf \neq Rf \neq f$ oraz $Cf \neq f$. Gdyby $CRf = f$ to stosując do obu stron tej równości transformację $C$
+  otrzymalibyśmy $CCRf = Cf$, skąd $Rf = Cf$, czyli sprzeczność z założeniem. Zatem $CRf \neq f$.
+ \end{enumerate}
+Zauważmy, że warstwa, której elementy spełniają warunek $1$ musi zawierać dokładniej jedną regułę, warstwa, która spełnia warunek $2$, $3$ albo
+$4$ musi zawierać dokładnie dwie reguły, zaś warstwa której elementy spełniają warunek $5$ zawiera dokładnie cztery reguły.
+\\Oznaczmy przez $n_{i}$ liczbę reguły spełniających warunek $i$, gdzie $i = 1,2,3,4,5$. Mamy oczywiście
+\[
+ n_{1} + n_{2} + n_{3} + n_{4} + n_{5} = 256.
+\]
+Należy pokazać, że
+\[
+ n_{1} + \frac{n_{2}}{2} + \frac{n_{3}}{2} + \frac{n_{4}}{2} + \frac{n_{5}}{4} = 88.
+\]
+Niech $(l_{7}l_{6}l_{5}l_{4}l_{3}l_{2}l_{1}l_{0})$ to Lookup table dla reguły $f \in ECA$. Porównując wartości Lookup table dla reguł $f$, $Rf$
+oraz $Cf$ dla każdego z powyższych przypadków otrzymujemy:
+\begin{enumerate}
+ \item $l_{7} = 1 - l_{0}$, $l_{2} = 1 - l_{5}$, $l_{1} = l_{4} = 1 - l_{6}$ oraz $l_{3} = l_{6}$. Zatem Lookup table dla reguł spełniającej 
+ ten warunek zależna jest tylko od $3$ liczb. Stąd $n_{1} = 2^{3} = 8$.
+ \item Z warunku $Cf = Rf$ otrzymujemy $l_{7} = 1 - l_{0}$, $l_{3} = 1 - l_{1}$, $l_{5} = 1 - l_{2}$ oraz $l_{4} = 1- l_{6}$. Wszystkich reguł
+ spełniających ten warunek jest $2^{4}$. Wykluczając reguły spełniające $Rf = Cf = f$ (czyli warunek $1$) otrzymujemy, że $n_{2} = 16 - 8 = 8$.
+ \item Z warunku $Cf = f$ otrzymujemy $l_{7} = 1 - l_{0}$, $l_{6} = 1 - l_{1}$, $l_{5} = 1 - l_{2}$ oraz $l_{4} = 1- l_{3}$. Wszystkich reguł
+ spełniających ten warunek jest $2^{4}$. Wykluczając reguły warunek $1$ otrzymujemy, że $n_{3} = 16 - 8 = 8$.
+ \item Z warunku $Rf = f$ otrzymujemy $l_{4} = l_{1}$ oraz $l_{3} = l_{6}$. Wszystkich reguł spełniających ten warunek jest $2^{6}$. 
+ Wykluczając czyli warunek $1$ otrzymujemy, że $n_{4} = 64 - 8 = 56$.
+ \item Liczbę reguł spełniających ten warunek obliczmy z równości na liczbę wszystkich reguł $ECA$:
+ \[
+  n_{5} = 256 - n_{1} - n_{2} - n_{3} - n_{4} = 256 - 8 - 8 - 8 - 56 = 176.
+ \]
+\end{enumerate}
+ Zatem
+ \[
+    n_{1} + \frac{n_{2}}{2} + \frac{n_{3}}{2} + \frac{n_{4}}{2} + \frac{n_{5}}{4} = 8 + 4 + 4 + 28 + 44 = 88,
+ \]
+co należało pokazać.
+
+\end{proof}
+
+\begin{corollary}
+ Liczba reguł należących do jednej warstwy wynosi 1, 2 albo 4.
+\end{corollary}
+
+\chapter{Ogólne własności elementarnych automatów komórkowych}
+W niniejszym rozdziale zbadamy niektóre własności jednowymiarowych automatów komórkowych. Oblicznia będziemy prowadzili dla wektora 
+początkowego o długości 8 posiadającego każde z możliwych sąsiedztw:
+\[
+ I = (11101000).
+\]
+Można wykazać, że dla automatu o promieniu $r\in\mathbb{N}$ istnieje wektor posiadający każde z $2^{2r+1}$ sąsiedztw.
+\section{Stosunki sąsiedztw}
+Niech $T > 0$ oraz $TSD \in \{0,1\}^{(T+1)\times8}$ to macierz będąca space-time diagram 
+
+\chapter{Rozkłady stosunków sąsiedztw}
+W niniejszym rozdziale zbadamy jakie są rozkłady sąsiedztw dla wektorów początkowych o długości większej niż 8.
+% zakończenie
+\summary
+
+% załączniki (opcjonalnie):
+\appendix
+\chapter{Tytuł załącznika jeden}
+
+Treść załącznika jeden.
+
+\chapter{Tytuł załącznika dwa}
+
+Treść załącznika dwa.
+
+% literatura (obowiązkowo):
+\bibliographystyle{unsrt}
+\bibliography{xml}
+
+% spis tabel (jeżeli jest potrzebny):
+\listoftables
+
+% spis rysunków (jeżeli jest potrzebny):
+\listoffigures
+
+\oswiadczenie
+
+\end{document}
